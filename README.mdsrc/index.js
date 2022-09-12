@@ -1,0 +1,56 @@
+ импортировать  React  из  «реагировать» ;
+импортировать ReactDOM  из « react  -dom» ; 
+ импортировать {  initApp , isIntroViewed } из " ./api/vk/index " ;    
+import  {  applyMiddleware ,  createStore  }  из  «редукции» ;
+ импортировать преобразователь  из "  redux -thunk" ;
+ импортировать {  Provider  }  из "  react -redux" ;
+ импортировать rootReducer  из "  ./store/reducers.js" ;
+импортировать  {  RouterContext  }  из  "@happysanta/router" ;
+импортировать  {  router  }  из  "./router/index.js" ;
+ импортировать AppWithEpic  из "  ./AppWithEpic" ;
+импортировать  приложение  из  "./App" ;
+
+константа  configureStore  =  ( )  =>  {
+  const  store  =  createStore ( rootReducer ,  applyMiddleware ( thunk ) ) ;
+
+  если  ( процесс . env . NODE_ENV  !==  "производство" )  {
+    если  ( модуль . горячий )  {
+      модуль . горячий . принять ( " ./store/reducers " , ( ) => {   
+        магазин . заменилредусер ( кореньредусер ) ;
+      } ) ;
+    }
+  }
+
+  возврат  магазина ;
+} ;
+экспортировать  const  store  =  configureStore ( ) ;
+
+запустить приложение ( ) ;
+
+isIntroViewed ( ) ;
+константа  рендеринга  =  ( Компонент )  =>  {
+  вернуть  ReactDOM . визуализировать (
+    < Контекст Маршрутизатора . Значение провайдера  = { маршрутизатор } >
+      < Магазин поставщика  = { магазин } >
+        < Компонент  / >
+      < / Провайдер >
+    < / RouterContext . Провайдер > ,
+    документ . getElementById ( "корень" ) ,
+  ) ;
+} ;
+
+ константа  isEpicEnabled =  истина ;
+render ( isEpicEnabled ? AppWithEpic : App ) ;
+если  ( модуль . горячий  &&  isEpicEnabled )  {
+  модуль . горячий . принять ( " ./AppWithEpic.js " , ( ) => {   
+    const  NextApp  =  require ( "./AppWithEpic.js" ) . по умолчанию ;
+    рендеринг ( NextApp ) ;
+  } ) ;
+}  иначе  если  ( модуль . горячий  &&  ! isEpicEnabled )  {
+  модуль . горячий . принять ( "./Приложение" ,  ( )  =>  {
+    const  NextApp  =  требуется ( "./App" ) . по умолчанию ;
+    рендеринг ( NextApp ) ;
+  } ) ;
+}
+// если (процесс.env.NODE_ENV === 'разработка')
+// import('./eruda').then(({ default: eruda }) => {}); // загрузка во время выполнения
